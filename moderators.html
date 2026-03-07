@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>VORTEX Moderators</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500&display=swap" rel="stylesheet">
+
+<style>
+
+body{
+margin:0;
+height:100vh;
+background:#071a2c;
+font-family:'Orbitron';
+display:flex;
+flex-direction:column;
+align-items:center;
+justify-content:center;
+color:#6fa6ff;
+}
+
+h1{
+font-size:70px;
+margin-bottom:40px;
+}
+
+.mod{
+border:2px solid #4f8cff;
+padding:15px 40px;
+margin:10px;
+border-radius:30px;
+cursor:pointer;
+transition:.3s;
+}
+
+.mod:hover{
+background:#4f8cff;
+color:#071a2c;
+}
+
+</style>
+</head>
+
+<body>
+
+<h1>VORTEX</h1>
+
+<div class="mod" onclick="openLink('https://guns.lol/22.gaby.7')">
+getrichGaby
+</div>
+
+<div class="mod" onclick="openLink('https://steamcommunity.com/profiles/76561199525629584/')">
+getrichiugi
+</div>
+
+<div class="mod" onclick="openLink('https://steamcommunity.com/profiles/76561198752467251')">
+Soggy#cacatlacur
+</div>
+
+<script>
+
+function openLink(link){
+window.open(link,"_blank")
+}
+
+</script>
+
+</body>
+</html>

@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>GO.VORTEX.RO</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600&display=swap" rel="stylesheet">
+
+<style>
+
+body{
+margin:0;
+height:100vh;
+background:#091229;
+font-family:'Orbitron',sans-serif;
+overflow:hidden;
+display:flex;
+flex-direction:column;
+align-items:center;
+justify-content:center;
+color:#315ed8;
+}
+
+/* ENERGY BACKGROUND */
+
+#energy{
+position:absolute;
+top:0;
+left:0;
+width:100%;
+height:100%;
+z-index:-1;
+}
+
+/* LOGO */
+
+.logo{
+font-size:95px;
+letter-spacing:12px;
+color:#223bac;
+position:relative;
+margin-bottom:60px;
+}
+
+.logo::after{
+content:"GO.VORTEX.RO";
+position:absolute;
+left:0;
+top:0;
+color:#3a69c0;
+background:linear-gradient(90deg,transparent,#19a7e9,transparent);
+background-size:200%;
+-webkit-background-clip:text;
+color:transparent;
+animation:wave 3s linear infinite;
+}
+
+@keyframes wave{
+0%{background-position:200%}
+100%{background-position:-200%}
+}
+
+/* BUTTONS */
+
+.buttons{
+display:flex;
+flex-direction:column;
+gap:18px;
+}
+
+button{
+width:250px;
+padding:16px;
+font-size:18px;
+background:transparent;
+border:2px solid #3a2df0;
+color:#2d4ddd;
+border-radius:40px;
+cursor:pointer;
+transition:.25s;
+}
+
+button:hover{
+background:#19cae9;
+color:#050818;
+transform:translateY(-4px) scale(1.07);
+box-shadow:0 0 12px #4f61ff,0 0 40px #4f69ff;
+}
+
+/* WEAPONS */
+
+.weapon{
+position:absolute;
+width:320px;
+image-rendering:pixelated;
+animation:float 8s ease-in-out infinite;
+}
+
+.weapon1{
+top:15%;
+left:8%;
+}
+
+.weapon2{
+bottom:12%;
+right:10%;
+transform:scaleX(-1);
+}
+
+@keyframes float{
+0%{transform:translateY(0px) rotate(-5deg)}
+50%{transform:translateY(-20px) rotate(5deg)}
+100%{transform:translateY(0px) rotate(-5deg)}
+}
+
+/* BULLETS */
+
+.bullet{
+position:absolute;
+width:6px;
+height:2px;
+background:yellow;
+box-shadow:0 0 6px yellow;
+}
+
+/* MUSIC */
+
+#musicBtn{
+position:fixed;
+bottom:20px;
+right:20px;
+}
+
+</style>
+</head>
+
+<body>
+
+<canvas id="energy"></canvas>
+
+<img src="ak.png" class="weapon weapon1">
+<img src="ak.png" class="weapon weapon2">
+
+<div class="logo">GO.VORTEX.RO</div>
+
+<div class="buttons">
+
+<button onclick="connect()">CONNECT</button>
+
+<button onclick="location.href='moderators.html'">MODERATORS</button>
+
+<button onclick="location.href='leaderboard.html'">LEADERBOARD</button>
+
+<button onclick="discord()">💬 DISCORD</button>
+
+</div>
+
+<button id="musicBtn">Music 🔊</button>
+
+<div id="player" style="display:none"></div>
+
+<script src="https://www.youtube.com/iframe_api"></script>
+
+<script>
+
+/* CONNECT */
+
+function connect(){
+window.location.href="steam://connect/123.45.67.89:27015"
+}
+
+/* DISCORD */
+
+function discord(){
+window.open("https://discord.gg/zJmvB4Q3")
+}
+
+/* MUSIC */
+
+let player
+let playing=false
+
+function onYouTubeIframeAPIReady(){
+player=new YT.Player('player',{
+height:'0',
+width:'0',
+videoId:'ZjPB3a2t1vk',
+playerVars:{autoplay:0,loop:1,playlist:'ZjPB3a2t1vk'}
+})
+}
+
+document.body.addEventListener("click",()=>{
+if(!playing){
+player.playVideo()
+playing=true
+}
+},{once:true})
+
+document.getElementById("musicBtn").onclick=function(){
+
+if(playing){
+player.pauseVideo()
+this.innerHTML="Music 🔇"
+}else{
+player.playVideo()
+this.innerHTML="Music 🔊"
+}
+
+playing=!playing
+
+}
+
+/* ENERGY PARTICLES */
+
+const canvas=document.getElementById("energy")
+const ctx=canvas.getContext("2d")
+
+canvas.width=window.innerWidth
+canvas.height=window.innerHeight
+
+let particles=[]
+
+for(let i=0;i<120;i++){
+particles.push({
+x:Math.random()*canvas.width,
+y:Math.random()*canvas.height,
+vx:(Math.random()-0.5)*0.6,
+vy:(Math.random()-0.5)*0.6,
+size:Math.random()*2
+})
+}
+
+function animate(){
+
+ctx.clearRect(0,0,canvas.width,canvas.height)
+
+ctx.fillStyle="rgba(80,140,255,0.6)"
+
+particles.forEach(p=>{
+
+p.x+=p.vx
+p.y+=p.vy
+
+if(p.x<0)p.x=canvas.width
+if(p.x>canvas.width)p.x=0
+if(p.y<0)p.y=canvas.height
+if(p.y>canvas.height)p.y=0
+
+ctx.beginPath()
+ctx.arc(p.x,p.y,p.size,0,Math.PI*2)
+ctx.fill()
+
+})
+
+requestAnimationFrame(animate)
+
+}
+
+animate()
+
+/* BULLETS */
+
+function createBullet(){
+
+let bullet=document.createElement("div")
+bullet.className="bullet"
+
+let x=Math.random()*window.innerWidth
+let y=Math.random()*window.innerHeight
+
+let vx=(Math.random()-0.5)*12
+let vy=(Math.random()-0.5)*12
+
+bullet.style.left=x+"px"
+bullet.style.top=y+"px"
+
+document.body.appendChild(bullet)
+
+let life=0
+
+let interval=setInterval(()=>{
+
+x+=vx
+y+=vy
+
+if(x<0||x>window.innerWidth)vx*=-1
+if(y<0||y>window.innerHeight)vy*=-1
+
+bullet.style.left=x+"px"
+bullet.style.top=y+"px"
+
+life++
+
+if(life>180){
+bullet.remove()
+clearInterval(interval)
+}
+
+},30)
+
+}
+
+setInterval(createBullet,700)
+
+</script>
+
+</body>
+</html>
